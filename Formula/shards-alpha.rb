@@ -3,7 +3,7 @@ class ShardsAlpha < Formula
   homepage "https://github.com/crimson-knight/shards"
   url "https://github.com/crimson-knight/shards/archive/refs/heads/alpha.tar.gz"
   version "2025.11.25.3"
-  sha256 "505eec53025efccf3da48f4f7049116a686b624fdb1597986faa1d03da1d692e"
+  sha256 "b8fd66a9285e76a0a86c16a68ef1b4fc0b7d32d160c746b60a7f2e74afedd7a2"
   license "Apache-2.0"
 
   depends_on "crystal"
