@@ -1,8 +1,9 @@
 class ShardsAlpha < Formula
   desc "Crystal Shards fork with supply chain compliance, AI assistant config, and AI docs"
   homepage "https://github.com/crimson-knight/shards"
-  url "https://github.com/crimson-knight/shards/archive/refs/tags/v2025.11.25.3.tar.gz"
-  sha256 "65a95798516262f6803fb8b43cb22657ad04b472c497e399d2a0420a9b2c3e32"
+  url "https://github.com/crimson-knight/shards/archive/refs/heads/alpha.tar.gz"
+  version "2025.11.25.3"
+  sha256 "505eec53025efccf3da48f4f7049116a686b624fdb1597986faa1d03da1d692e"
   license "Apache-2.0"
 
   depends_on "crystal"
