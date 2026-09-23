@@ -1,9 +1,9 @@
 class Engram < Formula
   desc "Branch-scoped memory for coding agents — perfect recall on checkout, clean amnesia on switch"
   homepage "https://github.com/crimson-knight/engram"
-  url "https://github.com/crimson-knight/engram/archive/refs/tags/v0.1.1.tar.gz"
-  version "0.1.1"
-  sha256 "e201995360597c02b3de910aa474d25ab57118585ea9333f3543cca721581e3d"
+  url "https://github.com/crimson-knight/engram/archive/refs/tags/v0.2.0.tar.gz"
+  version "0.2.0"
+  sha256 "79a4ed30aa89891f373a2a3a046a8db762867d0fd0dcb8c04e917f9af427bcf3"
   license "MIT"
 
   depends_on "crystal" => :build
@@ -19,7 +19,7 @@ class Engram < Formula
   # against libssl/libcrypto, and macOS ships neither, so without this the
   # linker falls back to a bare `-lssl -lcrypto` with no `-L` path and fails.
   def install
-    system "shards", "install", "--without-development"
+    system "shards", "install", "--frozen", "--without-development"
     system "crystal", "build", "src/engram.cr", "-o", "engram", "--release"
     bin.install "engram"
   end
