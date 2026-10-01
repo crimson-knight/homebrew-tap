@@ -13,6 +13,7 @@ class ShardsAlpha < Formula
   depends_on "pcre2"
 
   def install
+    ENV["CRYSTAL_CACHE_DIR"] = (buildpath/".crystal-cache").to_s
     compiler = Formula["crimson-knight/agent-crystal/agent-crystal"].opt_bin/"acrystal"
     system compiler, "run", "scripts/verify_vendored_dependencies.cr"
     system "make", "bin/shards-alpha", "release=1", "CRYSTAL=#{compiler}",
