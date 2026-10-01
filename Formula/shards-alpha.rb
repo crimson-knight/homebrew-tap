@@ -20,11 +20,13 @@ class ShardsAlpha < Formula
     system "make", "bin/shards-alpha", "release=1", "CRYSTAL=#{compiler}",
            "SHARDS_CONFIG_BUILD_COMMIT=2e38fc2"
     libexec.install "bin/shards-alpha"
+    bin.mkpath
     (bin/"shards-alpha").write <<~SH
       #!/bin/sh
       export CRYSTAL="${CRYSTAL:-#{compiler}}"
       exec "#{libexec}/shards-alpha" "$@"
     SH
+    (bin/"shards-alpha").chmod 0755
   end
 
   test do
