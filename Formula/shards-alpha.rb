@@ -3,10 +3,11 @@ class ShardsAlpha < Formula
   homepage "https://github.com/crimson-knight/shards"
   url "https://github.com/crimson-knight/shards/archive/refs/tags/v2025.11.25.6.tar.gz"
   version "2025.11.25.6"
+  revision 1
   sha256 "e987aa3eb5982f498f6f8a91b24770f31b4dbaab9a78af40d0943624c0fb00b2"
   license "Apache-2.0"
 
-  depends_on "crimson-knight/agent-crystal/agent-crystal" => :build
+  depends_on "crimson-knight/agent-crystal/agent-crystal"
   depends_on "bdw-gc"
   depends_on "libyaml"
   depends_on "openssl@3"
@@ -18,10 +19,17 @@ class ShardsAlpha < Formula
     system compiler, "run", "scripts/verify_vendored_dependencies.cr"
     system "make", "bin/shards-alpha", "release=1", "CRYSTAL=#{compiler}",
            "SHARDS_CONFIG_BUILD_COMMIT=2e38fc2"
-    bin.install "bin/shards-alpha"
+    libexec.install "bin/shards-alpha"
+    (bin/"shards-alpha").write <<~SH
+      #!/bin/sh
+      export CRYSTAL="${CRYSTAL:-#{compiler}}"
+      exec "#{libexec}/shards-alpha" "$@"
+    SH
   end
 
   test do
+    ENV["SHARDS_CACHE_PATH"] = (testpath/"cache").to_s
+    ENV["CRYSTAL"] = (Formula["crimson-knight/agent-crystal/agent-crystal"].opt_bin/"acrystal").to_s
     assert_match "Shards Alpha 2025.11.25.6", shell_output("#{bin}/shards-alpha --version")
     (testpath/"dependency/.claude/skills/probe").mkpath
     (testpath/"dependency/shard.yml").write("name: docs_probe\nversion: 1.0.0\n")
