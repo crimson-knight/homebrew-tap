@@ -31,6 +31,7 @@ class ShardsAlpha < Formula
 
   test do
     ENV["SHARDS_CACHE_PATH"] = (testpath/"cache").to_s
+    ENV["CRYSTAL_CACHE_DIR"] = (testpath/"crystal-cache").to_s
     ENV["CRYSTAL"] = (Formula["crimson-knight/agent-crystal/agent-crystal"].opt_bin/"acrystal").to_s
     assert_match "Shards Alpha 2025.11.25.6", shell_output("#{bin}/shards-alpha --version")
     (testpath/"dependency/.claude/skills/probe").mkpath
