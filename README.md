@@ -26,20 +26,14 @@ Homebrew) and installs its shards strictly from `shard.lock`. See the
 [engram README](https://github.com/crimson-knight/engram#install) for the
 agent kit install.
 
-### shards-alpha
+### shards-alpha (deprecated)
 
-Fork of Crystal's [Shards](https://github.com/crystal-lang/shards) package manager with alpha features: AI docs distribution, SBOM generation, MCP server distribution, docs theming, and postinstall script tracking.
-
-```
-brew install shards-alpha
-```
-
-Installs as `shards-alpha` alongside the stock `shards` command -- no conflicts.
+`shards-alpha` from this tap is deprecated in favor of Minecart, which is the
+same project (crimson-knight/shards) at a newer, sha256-pinned release and
+installs both `minecart` and `shards-alpha`:
 
 ```
-shards-alpha install              # Install dependencies (with AI docs)
-shards-alpha sbom                 # Generate SPDX 2.3 SBOM
-shards-alpha sbom --format=cyclonedx  # Generate CycloneDX 1.6 SBOM
-shards-alpha ai-docs              # Manage AI documentation from deps
-shards-alpha docs                 # Generate themed docs with AI buttons
+brew uninstall shards-alpha
+brew install amberframework/amber_cli/minecart
+minecart --version
 ```
