@@ -26,20 +26,37 @@ Homebrew) and installs its shards strictly from `shard.lock`. See the
 [engram README](https://github.com/crimson-knight/engram#install) for the
 agent kit install.
 
-### shards-alpha
+### shards-alpha (deprecated)
 
-Fork of Crystal's [Shards](https://github.com/crystal-lang/shards) package manager with alpha features: AI docs distribution, SBOM generation, MCP server distribution, docs theming, and postinstall script tracking.
+`shards-alpha` from this tap is deprecated in favor of Minecart, which is the
+same project (crimson-knight/shards) at a newer, sha256-pinned release and
+installs both `minecart` and `shards-alpha`.
 
-```
-brew install shards-alpha
-```
+Minecart 2025.11.25.8 builds from its release tarball, sha256
+`15c7c0af5f29dbd5d651fbfe90bfe1c0cd614a5e72a55ccacc2c246c6e1ed38f`, through the
+`minecart` formula in the Amber CLI tap at commit
+`add328ed517dfffc6b0b07293b85fe25ae140bdc` (formula file sha256
+`ee4a9a4ce105ef2bbd8a0b7a3503285dee5b0033dd3a46a729dbaa66b3ab9c37`).
 
-Installs as `shards-alpha` alongside the stock `shards` command -- no conflicts.
+To move from this tap's `shards-alpha`:
 
-```
-shards-alpha install              # Install dependencies (with AI docs)
-shards-alpha sbom                 # Generate SPDX 2.3 SBOM
-shards-alpha sbom --format=cyclonedx  # Generate CycloneDX 1.6 SBOM
-shards-alpha ai-docs              # Manage AI documentation from deps
-shards-alpha docs                 # Generate themed docs with AI buttons
-```
+1. `brew unlink crimson-knight/tap/shards-alpha`, so Minecart can link its own
+   `shards-alpha`. Keep the old keg installed for now.
+2. Tap, pin and verify the reviewed formula, then install it. Paste the block as
+   one command: each step runs only if the one before it succeeded, so a hash
+   mismatch stops it before `brew install`.
+   ```sh
+   T="$(brew tap amberframework/amber_cli >/dev/null && brew --repo amberframework/amber_cli)" &&
+   git -C "$T" checkout --detach add328ed517dfffc6b0b07293b85fe25ae140bdc &&
+   printf "%s  %s\n" ee4a9a4ce105ef2bbd8a0b7a3503285dee5b0033dd3a46a729dbaa66b3ab9c37 "$T/Formula/minecart.rb" | shasum -a 256 -c - &&
+   HOMEBREW_NO_AUTO_UPDATE=1 brew install amberframework/amber_cli/minecart
+   ```
+3. Check it: `minecart --version` and `shards-alpha --version` both print
+   `Minecart 2025.11.25.8 (2026-10-06)`.
+4. Only then remove the old keg: `brew uninstall crimson-knight/tap/shards-alpha`.
+
+If step 2 or 3 fails, put the previous build back while you sort it out:
+`brew unlink amberframework/amber_cli/minecart` (when it is linked), then
+`brew link crimson-knight/tap/shards-alpha`. Run
+`git -C "$(brew --repo amberframework/amber_cli)" checkout main` to return the
+Amber CLI tap to its normal branch afterward.

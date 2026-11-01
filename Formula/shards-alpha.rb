@@ -7,6 +7,11 @@ class ShardsAlpha < Formula
   sha256 "e987aa3eb5982f498f6f8a91b24770f31b4dbaab9a78af40d0943624c0fb00b2"
   license "Apache-2.0"
 
+  # One shards-alpha: amberframework/amber_cli/minecart builds the newer sha256-pinned
+  # Minecart release and installs both `minecart` and `shards-alpha`.
+  deprecate! date:    "2026-11-01",
+             because: "is replaced by Minecart; follow https://github.com/crimson-knight/homebrew-tap#shards-alpha-deprecated"
+
   depends_on "crimson-knight/agent-crystal/agent-crystal"
   depends_on "bdw-gc"
   depends_on "libyaml"
