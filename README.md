@@ -42,14 +42,15 @@ To move from this tap's `shards-alpha`:
 
 1. `brew unlink crimson-knight/tap/shards-alpha`, so Minecart can link its own
    `shards-alpha`. Keep the old keg installed for now.
-2. Tap and check the reviewed formula, then install it:
+2. Tap, pin and verify the reviewed formula, then install it. Paste the block as
+   one command: each step runs only if the one before it succeeded, so a hash
+   mismatch stops it before `brew install`.
    ```sh
-   brew tap amberframework/amber_cli
-   git -C "$(brew --repo amberframework/amber_cli)" checkout --detach add328ed517dfffc6b0b07293b85fe25ae140bdc
-   shasum -a 256 "$(brew --repo amberframework/amber_cli)/Formula/minecart.rb"
+   T="$(brew tap amberframework/amber_cli >/dev/null && brew --repo amberframework/amber_cli)" &&
+   git -C "$T" checkout --detach add328ed517dfffc6b0b07293b85fe25ae140bdc &&
+   printf "%s  %s\n" ee4a9a4ce105ef2bbd8a0b7a3503285dee5b0033dd3a46a729dbaa66b3ab9c37 "$T/Formula/minecart.rb" | shasum -a 256 -c - &&
    HOMEBREW_NO_AUTO_UPDATE=1 brew install amberframework/amber_cli/minecart
    ```
-   Install only when the `shasum` line prints the formula sha256 above.
 3. Check it: `minecart --version` and `shards-alpha --version` both print
    `Minecart 2025.11.25.8 (2026-10-06)`.
 4. Only then remove the old keg: `brew uninstall crimson-knight/tap/shards-alpha`.
