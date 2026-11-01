@@ -35,14 +35,22 @@ installs both `minecart` and `shards-alpha`:
 ```
 brew update
 brew tap amberframework/amber_cli
-# Check the formula before removing the working shards-alpha:
-# expect version 2025.11.25.8 and sha256 15c7c0af5f29dbd5d651fbfe90bfe1c0cd614a5e72a55ccacc2c246c6e1ed38f
-brew cat amberframework/amber_cli/minecart | grep -E "^  (version|sha256) "
 brew trust --formula amberframework/amber_cli/minecart   # Homebrew 7 asks for this
-brew uninstall shards-alpha
-HOMEBREW_NO_AUTO_UPDATE=1 brew install amberframework/amber_cli/minecart
-minecart --version && shards-alpha --version
+# Go on only if the formula is the reviewed one and its source downloads and verifies:
+F=$(brew cat amberframework/amber_cli/minecart) &&
+  grep -qx '  version "2025.11.25.8"' <<<"$F" &&
+  grep -qx '  sha256 "15c7c0af5f29dbd5d651fbfe90bfe1c0cd614a5e72a55ccacc2c246c6e1ed38f"' <<<"$F" &&
+  HOMEBREW_NO_AUTO_UPDATE=1 brew fetch --build-from-source amberframework/amber_cli/minecart &&
+  brew uninstall shards-alpha &&
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install amberframework/amber_cli/minecart &&
+  minecart --version && shards-alpha --version
 ```
 
-If the Minecart install fails, `brew install crimson-knight/tap/shards-alpha`
-puts the previous build back.
+If the Minecart install fails after `shards-alpha` was removed, put the previous
+build back:
+
+```
+brew uninstall --ignore-dependencies minecart 2>/dev/null
+HOMEBREW_NO_AUTO_UPDATE=1 brew install crimson-knight/tap/shards-alpha
+shards-alpha --version
+```
