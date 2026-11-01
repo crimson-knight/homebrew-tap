@@ -33,7 +33,16 @@ same project (crimson-knight/shards) at a newer, sha256-pinned release and
 installs both `minecart` and `shards-alpha`:
 
 ```
+brew update
+brew tap amberframework/amber_cli
+# Check the formula before removing the working shards-alpha:
+# expect version 2025.11.25.8 and sha256 15c7c0af5f29dbd5d651fbfe90bfe1c0cd614a5e72a55ccacc2c246c6e1ed38f
+brew cat amberframework/amber_cli/minecart | grep -E "^  (version|sha256) "
+brew trust --formula amberframework/amber_cli/minecart   # Homebrew 7 asks for this
 brew uninstall shards-alpha
-brew install amberframework/amber_cli/minecart
-minecart --version
+HOMEBREW_NO_AUTO_UPDATE=1 brew install amberframework/amber_cli/minecart
+minecart --version && shards-alpha --version
 ```
+
+If the Minecart install fails, `brew install crimson-knight/tap/shards-alpha`
+puts the previous build back.
