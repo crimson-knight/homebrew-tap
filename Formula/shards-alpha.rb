@@ -9,9 +9,8 @@ class ShardsAlpha < Formula
 
   # One shards-alpha: amberframework/amber_cli/minecart builds the newer sha256-pinned
   # Minecart release and installs both `minecart` and `shards-alpha`.
-  deprecate! date:                "2026-10-24",
-             because:             "is replaced by Minecart, which also provides shards-alpha",
-             replacement_formula: "amberframework/amber_cli/minecart"
+  deprecate! date:    "2026-10-24",
+             because: "is replaced by Minecart; follow https://github.com/crimson-knight/homebrew-tap#shards-alpha-deprecated"
 
   depends_on "crimson-knight/agent-crystal/agent-crystal"
   depends_on "bdw-gc"
