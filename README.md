@@ -35,22 +35,27 @@ installs both `minecart` and `shards-alpha`:
 ```
 brew update
 brew tap amberframework/amber_cli
-brew trust --formula amberframework/amber_cli/minecart   # Homebrew 7 asks for this
-# Go on only if the formula is the reviewed one and its source downloads and verifies:
-F=$(brew cat amberframework/amber_cli/minecart) &&
-  grep -qx '  version "2025.11.25.8"' <<<"$F" &&
-  grep -qx '  sha256 "15c7c0af5f29dbd5d651fbfe90bfe1c0cd614a5e72a55ccacc2c246c6e1ed38f"' <<<"$F" &&
+# Each step runs only if the one before it passed. The whole formula file must be the
+# reviewed one (sha256 of Formula/minecart.rb) before Homebrew is allowed to load it.
+MC="$(brew --repository amberframework/amber_cli)/Formula/minecart.rb" &&
+  shasum -a 256 "$MC" | grep -q "^ee4a9a4ce105ef2bbd8a0b7a3503285dee5b0033dd3a46a729dbaa66b3ab9c37 " &&
+  brew trust --formula amberframework/amber_cli/minecart &&
   HOMEBREW_NO_AUTO_UPDATE=1 brew fetch --build-from-source amberframework/amber_cli/minecart &&
-  brew uninstall shards-alpha &&
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install amberframework/amber_cli/minecart &&
+  HOMEBREW_NO_AUTOREMOVE=1 brew uninstall shards-alpha &&
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install --build-from-source amberframework/amber_cli/minecart &&
   minecart --version && shards-alpha --version
 ```
+
+That formula file pins the Minecart 2025.11.25.8 release tarball, sha256
+`15c7c0af5f29dbd5d651fbfe90bfe1c0cd614a5e72a55ccacc2c246c6e1ed38f`.
 
 If the Minecart install fails after `shards-alpha` was removed, put the previous
 build back:
 
 ```
-brew uninstall --ignore-dependencies minecart 2>/dev/null
-HOMEBREW_NO_AUTO_UPDATE=1 brew install crimson-knight/tap/shards-alpha
-shards-alpha --version
+{ ! brew list --formula minecart >/dev/null 2>&1 ||
+    HOMEBREW_NO_AUTOREMOVE=1 brew uninstall --ignore-dependencies minecart; } &&
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install crimson-knight/tap/shards-alpha &&
+  brew list --versions shards-alpha &&
+  shards-alpha --version
 ```
