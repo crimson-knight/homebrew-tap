@@ -48,6 +48,19 @@ jobs:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@4790763c0a3ba4036f72634dc079c4a7dfcd4878
 
+      # setup-homebrew moves the tap into the workspace and checks out the commit
+      # that triggered the run. Called from the Bottles workflow, that commit
+      # predates the bottle block, so this step puts the tap at the commit under test.
+      - name: Put the tap at the commit under test
+        env:
+          COMMIT: ${{ inputs.ref || 'main' }}
+        run: |
+          git fetch --quiet origin "$COMMIT"
+          git checkout --quiet --force -B main FETCH_HEAD
+          TAP_HEAD="$(git -C "$(brew --repository "$TAP")" rev-parse HEAD)"
+          echo "tap is at $TAP_HEAD"
+          test "$TAP_HEAD" = "$(git rev-parse FETCH_HEAD)"
+
       - name: Register tap checkouts
         run: |
           brew tap --custom-remote "$TAP" "$PWD"
