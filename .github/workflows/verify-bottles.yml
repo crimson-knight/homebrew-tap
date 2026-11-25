@@ -6,9 +6,10 @@ name: Verify bottles
 # The Bottles workflow calls it after publishing; run it by hand any time:
 #   gh workflow run verify-bottles.yml -R crimson-knight/homebrew-tap --ref main
 #
-# --force-bottle: on the GitHub runners Homebrew built from source although the
-# same formula pours on an ordinary Mac (2026-11-25), so this job asks for the
-# bottle explicitly and still fails unless it was poured.
+# setup-homebrew checks out the commit that triggered the run, which for a call
+# from Bottles predates the bottle block; the job therefore checks out the
+# requested ref again before installing. --force-bottle makes a missing bottle
+# fail the job instead of building from source.
 
 on:
   workflow_dispatch:
