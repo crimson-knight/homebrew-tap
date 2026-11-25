@@ -5,6 +5,9 @@ class Engram < Formula
   version "0.2.0"
   sha256 "79a4ed30aa89891f373a2a3a046a8db762867d0fd0dcb8c04e917f9af427bcf3"
   license "MIT"
+  # Revision 1 builds with agent-crystal and ships bottles, so `brew upgrade` replaces
+  # a copy built with homebrew-core crystal.
+  revision 1
 
   # Built with the AgentC compiler. The binary links no part of it (the collector
   # is static), so the compiler is needed only to build.
