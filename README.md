@@ -22,7 +22,11 @@ engram version    # engram 0.2.0
 ```
 
 The formula is pinned to the v0.2.0 release tarball (sha256 checked by
-Homebrew) and installs its shards strictly from `shard.lock`. See the
+Homebrew) and builds with the AgentC compiler
+(`crimson-knight/agent-crystal`). Its two shards, crystal-db 0.13.1 and
+crystal-sqlite3 0.21.0 (the versions `shard.lock` records), come in as formula
+resources, each pinned by sha256. On Apple silicon with macOS 26 or later,
+Homebrew pours a prebuilt bottle, pinned by sha256 in the formula. See the
 [engram README](https://github.com/crimson-knight/engram#install) for the
 agent kit install.
 

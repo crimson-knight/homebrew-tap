@@ -6,25 +6,39 @@ class Engram < Formula
   sha256 "79a4ed30aa89891f373a2a3a046a8db762867d0fd0dcb8c04e917f9af427bcf3"
   license "MIT"
 
-  depends_on "crystal" => :build
+  # Built with the AgentC compiler. The binary links no part of it (the collector
+  # is static), so the compiler is needed only to build.
+  depends_on "crimson-knight/agent-crystal/agent-crystal" => :build
+  # Digest::SHA256 and the embedder's HTTPS client link libssl and libcrypto.
   depends_on "openssl@3"
 
-  # engram's only shard dependencies are crystal-lang/crystal-db and
-  # crystal-lang/crystal-sqlite3 — ordinary shards.crystal-lang.org packages
-  # with no exotic build requirements, so the stock `shards` bundled with
-  # Homebrew's `crystal` formula builds them fine; no shards-alpha fork needed.
-  # openssl@3 is needed explicitly (not just transitively via crystal) because
-  # Homebrew's build sandbox only wires up pkg-config/library paths for a
-  # formula's own declared dependencies: engram's stdlib Digest::SHA256 links
-  # against libssl/libcrypto, and macOS ships neither, so without this the
-  # linker falls back to a bare `-lssl -lcrypto` with no `-L` path and fails.
+  uses_from_macos "sqlite"
+
+  # engram's two shards, at the versions shard.lock records, each verified by sha256.
+  resource "db" do
+    url "https://github.com/crystal-lang/crystal-db/archive/refs/tags/v0.13.1.tar.gz"
+    sha256 "3d410f0fae612d209904b01a0e6c7b24a00e686342447afcc43b869e6f1d1cf7"
+  end
+
+  resource "sqlite3" do
+    url "https://github.com/crystal-lang/crystal-sqlite3/archive/refs/tags/v0.21.0.tar.gz"
+    sha256 "c3d91ce0fad147c05dcfab98f84b94a93e0982d9f681ce4caa1da6cb9d54f8a0"
+  end
+
   def install
-    system "shards", "install", "--frozen", "--without-development"
-    system "crystal", "build", "src/engram.cr", "-o", "engram", "--release"
+    # Crystal programs trust $PWD for Dir.current; Homebrew can keep a caller's $PWD it may not read.
+    ENV["PWD"] = buildpath.to_s
+    ENV["CRYSTAL_CACHE_DIR"] = (buildpath/".crystal-cache").to_s
+    (buildpath/"lib/db").install resource("db")
+    (buildpath/"lib/sqlite3").install resource("sqlite3")
+
+    compiler = formula_opt_bin("crimson-knight/agent-crystal/agent-crystal")/"crystal-alpha"
+    system compiler, "build", "src/engram.cr", "-o", "engram", "--release"
     bin.install "engram"
   end
 
   test do
+    ENV["PWD"] = testpath.to_s
     assert_match "engram #{version}", shell_output("#{bin}/engram version")
 
     # Scratch end-to-end: init creates .agents/memories + runs the first
