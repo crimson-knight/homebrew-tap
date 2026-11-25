@@ -9,6 +9,12 @@ class Engram < Formula
   # a copy built with homebrew-core crystal.
   revision 1
 
+  bottle do
+    root_url "https://github.com/crimson-knight/homebrew-tap/releases/download/engram-0.2.0_1"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe: "35e1df8a649b3c37bffeff2e0a8bf3df6a388aaaf4307b2e94f8a13a3dd0a9f6"
+  end
+
   # Built with the AgentC compiler. The binary links no part of it (the collector
   # is static), so the compiler is needed only to build.
   depends_on "crimson-knight/agent-crystal/agent-crystal" => :build
