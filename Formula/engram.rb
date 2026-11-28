@@ -11,7 +11,8 @@ class Engram < Formula
 
   # Built with the AgentC compiler. The binary links no part of it (the collector
   # is static), so the compiler is needed only to build.
-  # Built with agent-crystal 1.22.3-incremental-6 (tap commit c1f592484db8); scripts/sync_downstreams.rb in crimson-knight/homebrew-agent-crystal raises the revision when it moves.
+  # Built with agent-crystal 1.22.3-incremental-6 (tap commit c1f592484db8).
+  # scripts/sync_downstreams.rb in crimson-knight/homebrew-agent-crystal raises the revision when it moves.
   depends_on "crimson-knight/agent-crystal/agent-crystal" => :build
   # Digest::SHA256 and the embedder's HTTPS client link libssl and libcrypto.
   depends_on "openssl@3"
