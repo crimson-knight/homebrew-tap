@@ -7,16 +7,12 @@ class Engram < Formula
   license "MIT"
   # Revision 1 builds with agent-crystal and ships bottles, so `brew upgrade` replaces
   # a copy built with homebrew-core crystal.
-  revision 1
-
-  bottle do
-    root_url "https://github.com/crimson-knight/homebrew-tap/releases/download/engram-0.2.0_1"
-    rebuild 1
-    sha256 cellar: :any, arm64_tahoe: "35e1df8a649b3c37bffeff2e0a8bf3df6a388aaaf4307b2e94f8a13a3dd0a9f6"
-  end
+  revision 2
 
   # Built with the AgentC compiler. The binary links no part of it (the collector
   # is static), so the compiler is needed only to build.
+  # Built with agent-crystal 1.22.3-incremental-6 (tap commit c1f592484db8).
+  # scripts/sync_downstreams.rb in crimson-knight/homebrew-agent-crystal raises the revision when it moves.
   depends_on "crimson-knight/agent-crystal/agent-crystal" => :build
   # Digest::SHA256 and the embedder's HTTPS client link libssl and libcrypto.
   depends_on "openssl@3"
